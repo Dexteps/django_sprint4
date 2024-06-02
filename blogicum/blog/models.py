@@ -77,12 +77,9 @@ class Post(PublishedAndCreatedModel, models.Model):
         return self.title[:MAX_LENGTH_RENDER_TITLE]
 
 
-class Comment(models.Model):
+class Comment(PublishedAndCreatedModel):
 
     text = models.TextField('Текст')
-    created_at = models.DateTimeField(
-        auto_now_add=True, verbose_name='Добавлено'
-    )
     author = models.ForeignKey(
         User, on_delete=models.CASCADE,
         verbose_name='Автор публикации',
@@ -94,7 +91,10 @@ class Comment(models.Model):
         related_name='comments'
     )
 
-    class Meta:
+    class Meta(PublishedAndCreatedModel.Meta):
         verbose_name = 'коментарий'
         verbose_name_plural = 'коментарии'
-        ordering = ('created_at',)
+
+    def __str__(self) -> str:
+        return self.text[:MAX_LENGTH_RENDER_TITLE]
+

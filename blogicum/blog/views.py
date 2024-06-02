@@ -13,6 +13,7 @@ from django.db.models import Count
 from .models import Category, Post, User, Comment
 from .forms import PostForm, CommentForm
 from .common import filter_objects_published
+from .constants import POSTS_PAGE_LIMIT
 
 
 class IndexView(ListView):
@@ -20,7 +21,7 @@ class IndexView(ListView):
 
     model = Post
     template_name = 'blog/index.html'
-    paginate_by = 10
+    paginate_by = POSTS_PAGE_LIMIT
 
     def get_queryset(self):
         return Post.objects.select_related(
@@ -75,10 +76,9 @@ class PostDetailView(DetailView):
 class CategoryPostsView(ListView):
     """Класс вызова шаблона (категории)."""
 
-    category = None
     model = Post
     template_name = 'blog/category.html'
-    paginate_by = 10
+    paginate_by = POSTS_PAGE_LIMIT
 
     def get_queryset(self):
         self.category = get_object_or_404(
@@ -101,7 +101,7 @@ def profile(request, username):
     posts = Post.objects.filter(
         author=user).annotate(
             comment_count=Count('comments')).order_by('-pub_date')
-    paginator = Paginator(posts, 10)
+    paginator = Paginator(posts, POSTS_PAGE_LIMIT)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = {

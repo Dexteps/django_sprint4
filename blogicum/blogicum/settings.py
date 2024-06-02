@@ -4,11 +4,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-1!-k07&1pfxt#5^p6@h58tselrdurmb!l7(@d@-g^+_1xcs%4%'
 
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
+    'www.werwwolf4.pythonanywhere.com',
+    'werwwolf4.pythonanywhere.com',
 ]
 
 
