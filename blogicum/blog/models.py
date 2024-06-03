@@ -1,14 +1,14 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
-from core.models import PublishedAndCreatedModel
+from core.models import  CreatedAt, IsPublishedCreatedAt
 from .constants import MAX_LENGTH_RENDER_TITLE, MAX_LENGTH_TITLE
 
 
 User = get_user_model()
 
 
-class Category(PublishedAndCreatedModel, models.Model):
+class Category(IsPublishedCreatedAt):
     title = models.CharField('Заголовок', max_length=MAX_LENGTH_TITLE)
     description = models.TextField('Описание')
     slug = models.SlugField(
@@ -26,7 +26,7 @@ class Category(PublishedAndCreatedModel, models.Model):
         return self.title[:MAX_LENGTH_RENDER_TITLE]
 
 
-class Location(PublishedAndCreatedModel, models.Model):
+class Location(IsPublishedCreatedAt):
     name = models.CharField('Название места', max_length=MAX_LENGTH_TITLE)
 
     class Meta:
@@ -37,7 +37,7 @@ class Location(PublishedAndCreatedModel, models.Model):
         return self.name[:MAX_LENGTH_RENDER_TITLE]
 
 
-class Post(PublishedAndCreatedModel, models.Model):
+class Post(IsPublishedCreatedAt):
     title = models.CharField('Заголовок', max_length=MAX_LENGTH_TITLE,)
     text = models.TextField('Текст')
     pub_date = models.DateTimeField(
@@ -77,7 +77,7 @@ class Post(PublishedAndCreatedModel, models.Model):
         return self.title[:MAX_LENGTH_RENDER_TITLE]
 
 
-class Comment(PublishedAndCreatedModel):
+class Comment(CreatedAt):
 
     text = models.TextField('Текст')
     author = models.ForeignKey(
@@ -91,10 +91,9 @@ class Comment(PublishedAndCreatedModel):
         related_name='comments'
     )
 
-    class Meta(PublishedAndCreatedModel.Meta):
+    class Meta(CreatedAt.Meta):
         verbose_name = 'коментарий'
         verbose_name_plural = 'коментарии'
 
     def __str__(self) -> str:
         return self.text[:MAX_LENGTH_RENDER_TITLE]
-

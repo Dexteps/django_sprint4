@@ -95,24 +95,25 @@ def get_context_data(self, **kwargs):
 
 def profile(request, username):
     """функция отображения профиля."""
-    author = get_object_or_404(User, username=username)
+    template = 'blog/profile.html'
+    user = get_object_or_404(User, username=username)
     posts = Post.objects.filter(
-        author=author).annotate(
+        author=user).annotate(
             comment_count=Count('comments')).order_by('-pub_date')
     paginator = Paginator(posts, POSTS_PAGE_LIMIT)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = {
-        'profile': author,
+        'profile': user,
         'page_obj': page_obj,
     }
-    return render(request, 'blog/profile.html', context)
+    return render(request, template, context)
 
 
 class UserUpdateView(LoginRequiredMixin, UpdateView):
     model = User
     template_name = 'blog/user.html'
-    fields = ('username', 'last_name', 'email')
+    fields = ['username', 'last_name', 'email']
 
     def get_object(self):
         return self.request.user
@@ -176,12 +177,10 @@ def delete_comment(request, id, comment_id):
     comment = get_object_or_404(Comment,
                                 id=comment_id,
                                 author=request.user)
-    if comment.author != request.user:
-        return redirect('blog:post_detail', request.kwargs['post_id'])
     if request.method == 'POST':
         comment.delete()
         return redirect('blog:post_detail', post_id=id)
-    return render(request, 'blog/comment.html', {'comment': comment} )
+    return render(request, 'blog/comment.html',{'comment': comment})
 
 
 @login_required
@@ -191,9 +190,8 @@ def edit_comment(request, id, comment_id):
                                 id=comment_id,
                                 author=request.user)
     form = CommentForm(request.POST or None, instance=comment)
-    if comment.author != request.user:
-        return redirect('blog:post_detail', request.kwargs['post_id'])
+    context = {'form': form, 'comment': comment}
     if form.is_valid():
         form.save()
         return redirect('blog:post_detail', post_id=id)
-    return render(request, 'blog/comment.html', {'form': form, 'comment': comment})
+    return render(request, 'blog/comment.html', context)
