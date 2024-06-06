@@ -15,5 +15,6 @@ class IsPublishedCreatedAt(CreatedAt):
         default=True,
         help_text='Снимите галочку, чтобы скрыть публикацию.'
     )
+
     class Meta(CreatedAt.Meta):
         abstract = True

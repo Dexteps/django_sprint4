@@ -31,8 +31,8 @@ urlpatterns = [
         name='edit_profile'
     ),
     path(
-        '<int:post_id>/comment/',
-        views.add_comment,
+        'posts/<int:post_id>/comment/',
+        views.AddCommentCreateView.as_view(),
         name='add_comment'
     ),
     path(
@@ -42,7 +42,7 @@ urlpatterns = [
     ),
     path(
         'posts/<int:post_id>/delete/',
-        views.delete_post,
+        views.PostDeleteView.as_view(),
         name='delete_post'
     ),
     path(
@@ -57,7 +57,7 @@ urlpatterns = [
     ),
     path(
         'profile/<slug:username>/',
-        views.profile,
+        views.UserPostsListView.as_view(),
         name='profile'
     )
 ]

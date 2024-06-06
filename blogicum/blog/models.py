@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
-from core.models import  CreatedAt, IsPublishedCreatedAt
+from core.models import CreatedAt, IsPublishedCreatedAt
 from .constants import MAX_LENGTH_RENDER_TITLE, MAX_LENGTH_TITLE
 
 
@@ -82,8 +82,7 @@ class Comment(CreatedAt):
     text = models.TextField('Текст')
     author = models.ForeignKey(
         User, on_delete=models.CASCADE,
-        verbose_name='Автор публикации',
-        related_name='comments'
+        verbose_name='Автор публикации'
     )
     post = models.ForeignKey(
         Post, on_delete=models.CASCADE,
